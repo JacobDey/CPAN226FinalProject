@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohere AI Chatbot</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0; /* Needed for proper scrolling */
+        }
+        .chat-header {
+            background-color: #3f51b5;
+            color: white;
+            padding: 15px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+        }
+        .user-message {
+            justify-content: flex-end;
+        }
+        .bot-message {
+            justify-content: flex-start;
+        }
+        .message-content {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+        }
+        .user-message .message-content {
+            background-color: #3f51b5;
+            color: white;
+        }
+        .bot-message .message-content {
+            background-color: #e0e0e0;
+            color: black;
+        }
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+        }
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+        #send-button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        #send-button:hover {
+            background-color: #303f9f;
+        }
+        .typing-indicator {
+            color: #666;
+            font-style: italic;
+            padding: 10px;
+            display: none;
+        }
+        .prompt-buttons {
+            display: flex;
+            gap: 10px;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .prompt-button {
+            padding: 5px 10px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            flex: 1;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .prompt-button:hover {
+            background-color: #d0d0d0;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            max-width: 90%;
+        }
+        .modal-title {
+            margin-top: 0;
+            color: #3f51b5;
+        }
+        .modal-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .modal-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal-save {
+            background-color: #3f51b5;
+            color: white;
+        }
+        .modal-cancel {
+            background-color: #e0e0e0;
+        }
+        .reset-chat {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .reset-chat:hover {
+            background-color: #f57c00;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Cohere AI Chatbot</h2>
+            <button class="reset-chat" id="reset-chat">Reset Chat</button>
+        </div>
+        <div class="prompt-buttons">
+            <button class="prompt-button" id="prompt-button-1"></button>
+            <button class="prompt-button" id="prompt-button-2"></button>
+            <button class="prompt-button" id="prompt-button-3"></button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will appear here -->
+        </div>
+        <div class="typing-indicator" id="typing-indicator">
+            Bot is typing...
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <!-- Modal for editing prompts -->
+    <div class="modal" id="prompt-modal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="modal-title">Edit Prompt</h3>
+            <input type="text" class="modal-input" id="modal-input" placeholder="Enter prompt text...">
+            <div class="modal-buttons">
+                <button class="modal-button modal-cancel" id="modal-cancel">Cancel</button>
+                <button class="modal-button modal-save" id="modal-save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const promptButtons = [
+            document.getElementById('prompt-button-1'),
+            document.getElementById('prompt-button-2'),
+            document.getElementById('prompt-button-3')
+        ];
+        const promptModal = document.getElementById('prompt-modal');
+        const modalInput = document.getElementById('modal-input');
+        const modalCancel = document.getElementById('modal-cancel');
+        const modalSave = document.getElementById('modal-save');
+        const modalTitle = document.getElementById('modal-title');
+        const resetChatButton = document.getElementById('reset-chat');
+
+        let conversationHistory = [];
+        let currentPromptIndex = 0;
+        let prompts = [];
+        let hideNextResponse = false;
+
+        // Default prompts
+        const DEFAULT_PROMPTS = [
+            "Reply briefly and use gen z slang",
+            "Response like a 5 years old kid",
+            "Give me a detailed technical explanation"
+        ];
+
+        // Load prompts from localStorage or set defaults
+        function loadPrompts() {
+            const savedPrompts = localStorage.getItem('aiPrompts');
+            if (savedPrompts) {
+                prompts = JSON.parse(savedPrompts);
+            } else {
+                prompts = [...DEFAULT_PROMPTS];
+                savePrompts();
+            }
+            updatePromptButtons();
+        }
+
+        // Save prompts to localStorage
+        function savePrompts() {
+            localStorage.setItem('aiPrompts', JSON.stringify(prompts));
+        }
+
+        // Update the prompt buttons with current prompt text
+        function updatePromptButtons() {
+            promptButtons.forEach((button, index) => {
+                button.textContent = prompts[index] || `Prompt ${index + 1}`;
+                button.title = prompts[index] || `Prompt ${index + 1}`;
+            });
+        }
+
+        // Function to reset the chat history
+        function resetChatHistory() {
+            conversationHistory = [];
+            chatMessages.innerHTML = '';
+            addMessage('bot', "Hello! I'm an AI assistant powered by Cohere. How can I help you today?");
+        }
+
+        // Function to add a message to the chat
+        function addMessage(role, message) {
+            if (hideNextResponse && role === 'bot') {
+                hideNextResponse = false;
+                return;
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}-message`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = message;
+            
+            messageDiv.appendChild(contentDiv);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to the bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Function to send a message to the server
+        async function sendMessage(message, isPrompt = false) {
+            if (!message && !userInput.value.trim()) return;
+            
+            const msg = message || userInput.value.trim();
+            if (!msg) return;
+            
+            // Set flag to hide response if this is a prompt click
+            hideNextResponse = isPrompt;
+            
+            // Only add user message to UI if not a prompt
+            if (!isPrompt) {
+                addMessage('user', msg);
+            }
+            
+            if (!message) {
+                userInput.value = '';
+            }
+            
+            // Show typing indicator
+            typingIndicator.style.display = 'block';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: msg,
+                        history: conversationHistory
+                    }),
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Add bot response to UI unless this was a prompt
+                if (!isPrompt) {
+                    addMessage('bot', data.response);
+                }
+                
+                // Update conversation history regardless of visibility
+                conversationHistory = data.history;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                if (!isPrompt) {
+                    addMessage('bot', `Sorry, an error occurred: ${error.message}`);
+                }
+            } finally {
+                // Hide typing indicator
+                typingIndicator.style.display = 'none';
+            }
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', () => sendMessage());
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Prompt button event listeners
+        promptButtons.forEach((button, index) => {
+            // Left click to send (hidden)
+            button.addEventListener('click', (e) => {
+                if (e.button === 0 && prompts[index]) { // Left click
+                    sendMessage(prompts[index], true);
+                }
+            });
+            
+            // Right click to edit
+            button.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                currentPromptIndex = index;
+                modalTitle.textContent = `Edit Prompt ${index + 1}`;
+                modalInput.value = prompts[index] || '';
+                promptModal.style.display = 'flex';
+            });
+        });
+
+        // Reset chat button
+        resetChatButton.addEventListener('click', resetChatHistory);
+
+        // Modal event listeners
+        modalCancel.addEventListener('click', () => {
+            promptModal.style.display = 'none';
+        });
+
+        modalSave.addEventListener('click', () => {
+            prompts[currentPromptIndex] = modalInput.value;
+            savePrompts();
+            updatePromptButtons();
+            promptModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        promptModal.addEventListener('click', (e) => {
+            if (e.target === promptModal) {
+                promptModal.style.display = 'none';
+            }
+        });
+
+        // Initial setup
+        window.onload = function() {
+            loadPrompts();
+            addMessage('bot', "Hello! I'm an AI assistant powered by Cohere. How can I help you today?");
+        };
+    </script>
+</body>
+</html>
