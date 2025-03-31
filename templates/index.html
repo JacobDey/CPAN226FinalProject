@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohere AI Chatbot</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Cohere AI Chatbot</h2>
+            <button class="reset-chat" id="reset-chat">Reset Chat</button>
+        </div>
+        <div class="prompt-buttons">
+            <button class="prompt-button" id="prompt-button-1"></button>
+            <button class="prompt-button" id="prompt-button-2"></button>
+            <button class="prompt-button" id="prompt-button-3"></button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will appear here -->
+        </div>
+        <div class="typing-indicator" id="typing-indicator">
+            Bot is typing...
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
+            <button id="send-button">Send</button>
+            <div class="temperature-control">
+                <label for="temperature">Creativity:</label>
+                <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7">
+                <span id="temperature-value">0.7</span>
+            </div>
+            <div class="temperature-presets">
+                <button class="temp-preset" data-value="0.3">Precise</button>
+                <button class="temp-preset" data-value="0.7">Balanced</button>
+                <button class="temp-preset" data-value="1.0">Creative</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for editing prompts -->
+    <div class="modal" id="prompt-modal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="modal-title">Edit Prompt</h3>
+            <input type="text" class="modal-input" id="modal-input" placeholder="Enter prompt text...">
+            <div class="modal-buttons">
+                <button class="modal-button modal-cancel" id="modal-cancel">Cancel</button>
+                <button class="modal-button modal-save" id="modal-save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
