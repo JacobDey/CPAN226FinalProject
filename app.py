@@ -17,9 +17,8 @@ def home():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    prePrompt = "Make it concise with 1-2 sentence, use as few word as possible: "
     data = request.json
-    user_message = prePrompt + data.get('message', '')
+    user_message = data.get('message', '')
     conversation_history = data.get('history', [])
     temperature = float(data.get('temperature', 0.3))
 
