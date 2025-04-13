@@ -1,46 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cohere AI Chatbot</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/style.css') }}"
+    />
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h2>Cohere AI Chatbot</h2>
-            <button class="reset-chat" id="reset-chat">Reset Chat</button>
-        </div>
-        <div class="prompt-buttons">
-            <button class="prompt-button" id="prompt-button-1"></button>
-            <button class="prompt-button" id="prompt-button-2"></button>
-            <button class="prompt-button" id="prompt-button-3"></button>
-        </div>
-        <div class="chat-messages" id="chat-messages">
-            <!-- Messages will appear here -->
-        </div>
-        <div class="typing-indicator" id="typing-indicator">
-            Bot is typing...
-        </div>
-        <div class="chat-input">
-            <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
-            <button id="send-button">Send</button>
-        </div>
+<div class="app-container">
+    <header class="chat-header">
+        <h1>Cohere AI Chatbot</h1>
+        <form action="{{ url_for('reset') }}" method="GET">
+            <button type="submit" class="reset-button">Reset</button>
+        </form>
+    </header>
+
+    <div class="prompt-buttons">
+        {% for prompt in prompts %}
+        <button
+                class="prompt-button"
+                data-prompt="{{ loop.index0 }}"
+                onclick="submitPrompt('{{ loop.index0 }}')"
+        >
+            {{ prompt }}
+        </button>
+        {% endfor %}
     </div>
 
-    <!-- Modal for editing prompts -->
-    <div class="modal" id="prompt-modal">
-        <div class="modal-content">
-            <h3 class="modal-title" id="modal-title">Edit Prompt</h3>
-            <input type="text" class="modal-input" id="modal-input" placeholder="Enter prompt text...">
-            <div class="modal-buttons">
-                <button class="modal-button modal-cancel" id="modal-cancel">Cancel</button>
-                <button class="modal-button modal-save" id="modal-save">Save</button>
-            </div>
+    <main class="chat-window" id="chat-messages">
+        {% for entry in history %}
+        <div class="chat-message {{ entry.role|lower }}">
+            <div class="message-content">{{ entry.message }}</div>
         </div>
-    </div>
+        {% endfor %}
+    </main>
 
-    <script src="/static/js/script.js"></script>
+    <footer class="chat-input-container">
+        <form id="chat-form" class="chat-form" method="POST">
+            <input
+                    type="text"
+                    id="user-input"
+                    name="message"
+                    placeholder="Type your message here..."
+                    autocomplete="off"
+                    required
+            />
+            <button type="submit" id="send-button">Send</button>
+        </form>
+    </footer>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
+
+<script>
+    window.addEventListener("DOMContentLoaded", function () {
+        const chatMessages = document.getElementById("chat-messages");
+
+        setTimeout(() => {
+            if (chatMessages) {
+                console.log("Scroll height:", chatMessages.scrollHeight);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }, 50);
+    });
+</script>
 </html>
