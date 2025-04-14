@@ -160,10 +160,10 @@ promptButtons.forEach((button, index) => {
             // Left click
             if (prompts[index] === DEFAULT_PROMPTS[index]) {
                 // Increases randomness for gen z mode
-                temperature = 2;
+                temperature = 4;
             } else if (prompts[index] === DEFAULT_PROMPTS[index]) {
                 // Further increases randomness for 5 year old mode
-                temperature = 20;
+                temperature = 5;
             } else if (prompts[index] === DEFAULT_PROMPTS[index]) {
                 // No randomness for technical explanation mode
                 temperature = 0;
