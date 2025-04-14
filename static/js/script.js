@@ -117,7 +117,6 @@ async function sendMessage(message, isPrompt = false) {
                 message: msg,
                 history: conversationHistory,
                 temperature: temperature,
-                user_message: user_message,
             }),
         });
 
@@ -159,22 +158,19 @@ promptButtons.forEach((button, index) => {
     button.addEventListener("click", (e) => {
         if (e.button === 0 && prompts[index]) {
             // Left click
-            if (index === 0) {
-                // If second prompt is clicked
-                temperature = 0.7; // Change temperature to 0.3
-                user_message =
-                    "Forget any prior prompts, From now on respond to me in first person as if you were a Gen z using terms a gen z would use such as but not limited to rizz, gyat, sus, buss etc until further instructed, make your response short and consise, 1-2 lines maximum,  use as few words as possible";
-            } else if (index === 1) {
-                // If second prompt is clicked
-                temperature = 0.3; // Change temperature to 0.3
-                user_message =
-                    "Forget any prior prompts, From now on respond to me in first person as if you were a 5 year old until further instructed, make your response short and consise, 1-2 lines maximum, and use as few words as possible, don't use proper grammer, don't include any scientific reasoning";
-            } else if (index === 2) {
-                // If second prompt is clicked
-                temperature = 1; // Change temperature to 0.3
-                user_message =
-                    "Forget any prior prompts, From now on give me a very detailed response to anything I ask in first person until further instructed.";
+            if (prompts[index] === DEFAULT_PROMPTS[index]) {
+                // Increases randomness for gen z mode
+                temperature = 2;
+            } else if (prompts[index] === DEFAULT_PROMPTS[index]) {
+                // Further increases randomness for 5 year old mode
+                temperature = 20;
+            } else if (prompts[index] === DEFAULT_PROMPTS[index]) {
+                // No randomness for technical explanation mode
+                temperature = 0;
+            } else {
+                temperature = 1.0; // Reset to default
             }
+            // Send the prompt message
             sendMessage(prompts[index], true);
         }
     });
