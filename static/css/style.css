@@ -1,123 +1,269 @@
 body {
-    margin: 0;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
     background-color: #343541;
-    color: #ececec;
+    color: #ececf1;
+    margin: 40px 0;
+    height: calc(100vh - 80px);
     display: flex;
-    flex-direction: column;
-    height: 100vh;
+    justify-content: center;
+    align-items: stretch;
 }
 
-.app-container {
+.chat-container {
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
     max-width: 800px;
-    margin: 0 auto;
+    background-color: #444654;
+    border-radius: 20px;
+
+    overflow: hidden;
 }
 
 .chat-header {
-    padding: 1rem;
-    background-color: #202123;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #444;
+    background-color: #343541;
+    padding: 16px 20px;
+    text-align: center;
+    border-bottom: 1px solid #4e4f60;
 }
 
-.reset-button {
-    padding: 0.4rem 1rem;
-    background-color: #4b5563;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+.chat-title {
+    margin: 0;
+    font-size: 50px;
+    font-weight: 600;
+    color: #ececf1;
 }
 
 .prompt-buttons {
+    padding: 12px 20px;
+    background: #3e3f4b;
     display: flex;
+    justify-content: center;
+    gap: 10px;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background-color: #2a2b2f;
+    max-width: 100%;
 }
 
 .prompt-button {
-    background-color: #3b3b42;
+    padding: 6px 16px;
+    background-color: #5c5f70;
+    color: #ececf1;
     border: none;
-    padding: 0.4rem 0.8rem;
-    color: white;
-    border-radius: 6px;
+    border-radius: 9999px;
+    font-size: 13px;
     cursor: pointer;
-    font-size: 0.9rem;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.chat-window {
-    height: 70vh;
-    flex-grow: 1;
+.prompt-button:hover {
+    background-color: #707387;
+}
+
+.chat-messages {
+    flex: 1;
     overflow-y: auto;
-    padding: 1rem;
+    padding: 24px 20px;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    scroll-behavior: smooth;
+    gap: 20px;
+    background-color: #343541;
 }
 
-.chat-message {
+.message {
     display: flex;
-    max-width: 90%;
+    width: 100%;
 }
 
-.chat-message.user {
+.user-message {
     justify-content: flex-end;
 }
 
-.chat-message.chatbot {
+.bot-message {
     justify-content: flex-start;
 }
 
 .message-content {
-    background-color: #444654;
-    color: #fefefe;
-    padding: 0.8rem;
-    border-radius: 12px;
-    max-width: 100%;
-    line-height: 1.4;
+    padding: 14px 20px;
+    max-width: 85%;
+    border-radius: 20px;
+    line-height: 1.6;
+    font-size: 16px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
-.chat-message.user .message-content {
-    background-color: #2d7ff9;
+.user-message .message-content {
+    background-color: #2e7dff;
     color: white;
+    border-bottom-right-radius: 8px;
 }
 
-.chat-input-container {
-    border-top: 1px solid #444;
-    padding: 0.75rem 1rem;
-    background-color: #202123;
+.bot-message .message-content {
+    background-color: #3e3f4b;
+    color: #ececf1;
+    border-bottom-left-radius: 8px;
 }
 
-.chat-form {
+.typing-indicator {
+    font-size: 13px;
+    font-style: italic;
+    color: #aaa;
+    margin-left: 10px;
+}
+
+.chat-input {
+    padding: 16px;
+    border-top: 1px solid #4e4f60;
+    background: #40414f;
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.chat-form input[type="text"] {
-    flex-grow: 1;
-    padding: 0.7rem 1rem;
-    border-radius: 8px;
-    border: none;
+#user-input {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 14px;
+    border: 1px solid #5c5f70;
+    border-radius: 24px;
+    background-color: #2d2f3a;
+    color: #ececf1;
     outline: none;
-    font-size: 1rem;
 }
 
-.chat-form button {
-    padding: 0.7rem 1rem;
-    background-color: #10a37f;
+#user-input:focus {
+    border-color: #2e7dff;
+    background-color: #2b2d38;
+}
+
+#send-button {
+    padding: 10px 16px;
+    background-color: #2e7dff;
+    color: white;
+    font-weight: 500;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+#send-button:hover {
+    background-color: #1b5fd4;
+}
+
+.reset-chat {
+    background-color: #f44336;
     color: white;
     border: none;
-    border-radius: 8px;
+    padding: 10px 16px;
+    border-radius: 24px;
+    font-size: 12px;
     cursor: pointer;
-    font-weight: bold;
+    flex-shrink: 0;
 }
 
+.reset-chat:hover {
+    background-color: #c62828;
+}
 
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #3e3f4b;
+    padding: 24px;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 400px;
+    color: #ececf1;
+}
+
+.modal-title {
+    margin-top: 0;
+    font-weight: 600;
+    color: #2e7dff;
+    font-size: 18px;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 10px 14px;
+    margin: 10px 0;
+    background-color: #2d2f3a;
+    border: 1px solid #5c5f70;
+    border-radius: 8px;
+    color: #ececf1;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.modal-button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-save {
+    background-color: #2e7dff;
+    color: white;
+}
+
+.modal-cancel {
+    background-color: #5c5f70;
+    color: #ececf1;
+}
+
+.temperature-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #bbb;
+}
+
+.temperature-control input[type="range"] {
+    width: 80px;
+}
+
+#temperature-value {
+    width: 24px;
+    text-align: center;
+}
+
+.temperature-presets {
+    display: flex;
+    gap: 6px;
+}
+
+.temp-preset {
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 12px;
+    border: 1px solid #5c5f70;
+    background: #2d2f3a;
+    color: #ececf1;
+    cursor: pointer;
+}
+
+.temp-preset:hover {
+    background: #3e3f4b;
+}
