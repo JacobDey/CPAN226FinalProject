@@ -24,8 +24,8 @@ let temperature = 1.0; // Default temperature
 // Default prompts
 const DEFAULT_PROMPTS = [
     "Reply briefly and use gen z slang",
-    "Response like a 5 years old kid",
-    "Give me a detailed technical explanation",
+    "Respond like a 5 year old kid",
+    "Respond with a detailed technical explanation",
 ];
 
 // Load prompts from localStorage or set defaults
@@ -163,17 +163,17 @@ promptButtons.forEach((button, index) => {
                 // If second prompt is clicked
                 temperature = 0.7; // Change temperature to 0.3
                 user_message =
-                    " Forget any priot prompts, From now on respond to me in first person as if you were a Gen z using terms a gen z would use such as but not limited to rizz, gyat, sus, buss etc until further instructed, make your response short and consise, 1-2 lines maximum,  use as few words as possible";
+                    "Forget any prior prompts, From now on respond to me in first person as if you were a Gen z using terms a gen z would use such as but not limited to rizz, gyat, sus, buss etc until further instructed, make your response short and consise, 1-2 lines maximum,  use as few words as possible";
             } else if (index === 1) {
                 // If second prompt is clicked
                 temperature = 0.3; // Change temperature to 0.3
                 user_message =
-                    "Forget any prior promots, From now on respond to me in first person as if you were a 5 year old until further instructed, make your response short and consise, 1-2 lines maximum, and use as few words as possible, don't use proper grammer, don't include any scientific reasoning";
+                    "Forget any prior prompts, From now on respond to me in first person as if you were a 5 year old until further instructed, make your response short and consise, 1-2 lines maximum, and use as few words as possible, don't use proper grammer, don't include any scientific reasoning";
             } else if (index === 2) {
                 // If second prompt is clicked
                 temperature = 1; // Change temperature to 0.3
                 user_message =
-                    "Forget Any Priot Promots, From now on give me a very detailed response to anything I ask in first person until further instructed.";
+                    "Forget any prior prompts, From now on give me a very detailed response to anything I ask in first person until further instructed.";
             }
             sendMessage(prompts[index], true);
         }
